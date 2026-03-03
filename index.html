@@ -3,328 +3,934 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Até 30 Eu Adivinho · animação + roleta + explicação</title>
+    <title>Até 30 Eu Adivinho · Mágica Matemática</title>
     <style>
+        /* ============================================
+           RESET E CONFIGURAÇÕES GLOBAIS
+           Remove margens/paddings padrão e define box-sizing
+           ============================================ */
         * {
             box-sizing: border-box;
             font-family: 'Segoe UI', Roboto, system-ui, sans-serif;
             margin: 0;
             padding: 0;
         }
+        
+        /* ============================================
+           CORPO DA PÁGINA
+           Fundo gradiente, centralização do conteúdo
+           ============================================ */
         body {
-            background: linear-gradient(145deg, #0b2b40 0%, #123b4e 100%);
+            background: linear-gradient(145deg, #0b2b40 0%, #123b4e 50%, #0d3d52 100%);
             min-height: 100vh;
             display: flex;
             align-items: center;
             justify-content: center;
             margin: 0;
             padding: 16px;
+            overflow-x: hidden;
         }
+        
+        /* ============================================
+           CONTAINER PRINCIPAL DO JOGO
+           Efeito de vidro fosco (glassmorphism) com blur
+           ============================================ */
         .game-container {
-            background: rgba(255, 255, 255, 0.1);
-            backdrop-filter: blur(8px);
-            -webkit-backdrop-filter: blur(8px);
-            border-radius: 48px;
-            padding: 24px;
-            box-shadow: 0 20px 40px rgba(0,0,0,0.6), 0 0 0 2px rgba(255,215,0,0.2) inset;
+            background: rgba(255, 255, 255, 0.08);
+            backdrop-filter: blur(12px);
+            -webkit-backdrop-filter: blur(12px);
+            border-radius: 32px;
+            padding: 20px;
+            box-shadow: 
+                0 25px 50px rgba(0,0,0,0.5), 
+                0 0 0 1px rgba(255,215,0,0.15) inset,
+                inset 0 1px 0 rgba(255,255,255,0.1);
             width: 100%;
-            max-width: 750px;
+            max-width: 720px;
+            animation: containerPulse 4s ease-in-out infinite;
         }
+        
+        /* Animação de pulsação sutil no container */
+        @keyframes containerPulse {
+            0%, 100% { box-shadow: 0 25px 50px rgba(0,0,0,0.5), 0 0 0 1px rgba(255,215,0,0.15) inset, inset 0 1px 0 rgba(255,255,255,0.1); }
+            50% { box-shadow: 0 25px 50px rgba(0,0,0,0.5), 0 0 0 2px rgba(255,215,0,0.25) inset, inset 0 1px 0 rgba(255,255,255,0.1); }
+        }
+        
+        /* ============================================
+           CARD INTERNO (ÁREA BRANCA)
+           Onde todo o conteúdo do jogo fica
+           ============================================ */
         .card {
-            background: #fefefe;
-            border-radius: 36px;
-            padding: 30px 24px;
-            box-shadow: 0 12px 0 #0a1f2a, 0 20px 30px rgba(0,0,0,0.5);
+            background: linear-gradient(180deg, #fefefe 0%, #f8f9fa 100%);
+            border-radius: 24px;
+            padding: 28px 22px;
+            box-shadow: 
+                0 8px 0 #0a1f2a, 
+                0 16px 40px rgba(0,0,0,0.4),
+                inset 0 1px 0 rgba(255,255,255,0.8);
             border: 2px solid #ffd966;
-            transition: all 0.2s;
+            transition: transform 0.3s ease, box-shadow 0.3s ease;
             position: relative;
         }
+        
+        .card:hover {
+            transform: translateY(-2px);
+            box-shadow: 
+                0 10px 0 #0a1f2a, 
+                0 20px 50px rgba(0,0,0,0.45),
+                inset 0 1px 0 rgba(255,255,255,0.8);
+        }
+        
+        /* ============================================
+           TÍTULO PRINCIPAL
+           "ATÉ 30 EU ADIVINHO"
+           ============================================ */
         h1 {
-            font-size: 2.2rem;
+            font-size: clamp(1.8rem, 5vw, 2.4rem);
             font-weight: 800;
             letter-spacing: -0.5px;
             color: #ffd966;
-            text-shadow: 3px 3px 0 #0e2f3f, 5px 5px 0 #00000055;
+            text-shadow: 
+                3px 3px 0 #0e2f3f, 
+                5px 5px 0 rgba(0,0,0,0.3),
+                0 0 30px rgba(255, 217, 102, 0.3);
             margin-top: 0;
             margin-bottom: 8px;
             text-align: center;
             word-break: break-word;
+            animation: titleGlow 3s ease-in-out infinite;
         }
+        
+        /* Animação de brilho no título */
+        @keyframes titleGlow {
+            0%, 100% { text-shadow: 3px 3px 0 #0e2f3f, 5px 5px 0 rgba(0,0,0,0.3), 0 0 30px rgba(255, 217, 102, 0.3); }
+            50% { text-shadow: 3px 3px 0 #0e2f3f, 5px 5px 0 rgba(0,0,0,0.3), 0 0 50px rgba(255, 217, 102, 0.5); }
+        }
+        
+        /* ============================================
+           SUBTÍTULO
+           "pense em um número · 5 perguntas"
+           ============================================ */
         .subhead {
             text-align: center;
             color: #c9e9ff;
             font-weight: 500;
-            background: #0f3448;
+            background: linear-gradient(135deg, #0f3448 0%, #1a4a5e 100%);
             display: inline-block;
-            padding: 8px 28px;
-            border-radius: 60px;
-            margin: 0 auto 24px;
-            font-size: 1.2rem;
-            border: 1px solid #ffd96677;
-            box-shadow: inset 0 2px 5px #00000033;
+            padding: 10px 28px;
+            border-radius: 50px;
+            margin: 0 auto 20px;
+            font-size: clamp(1rem, 3vw, 1.2rem);
+            border: 1px solid rgba(255, 217, 102, 0.4);
+            box-shadow: 
+                inset 0 2px 5px rgba(0,0,0,0.2),
+                0 4px 10px rgba(0,0,0,0.2);
         }
+        
+        /* ============================================
+           BADGE DE CONTADOR DE ACESSOS
+           Mostra quantas vezes o jogo foi aberto
+           ============================================ */
         .counter-badge {
             position: absolute;
-            top: 20px;
-            right: 30px;
-            background: #2f6f8f;
+            top: 16px;
+            right: 22px;
+            background: linear-gradient(135deg, #2f6f8f 0%, #3a8ab0 100%);
             color: white;
-            padding: 8px 18px;
-            border-radius: 40px;
+            padding: 8px 16px;
+            border-radius: 50px;
             font-weight: 600;
             border: 2px solid #ffd966;
-            box-shadow: 0 4px 0 #123b4e;
-            font-size: 1.2rem;
+            box-shadow: 
+                0 4px 0 #123b4e,
+                0 6px 12px rgba(0,0,0,0.3);
+            font-size: 1rem;
             z-index: 2;
+            transition: transform 0.2s ease;
         }
+        
+        .counter-badge:hover {
+            transform: scale(1.05);
+        }
+        
+        /* ============================================
+           BOTÃO DE INFORMAÇÃO (COMO FUNCIONA)
+           Abre o modal com a explicação matemática
+           ============================================ */
         .info-badge {
             position: absolute;
-            top: 20px;
-            left: 30px;
-            background: #5f9ea0;
+            top: 16px;
+            left: 22px;
+            background: linear-gradient(135deg, #5f9ea0 0%, #6fb3b5 100%);
             color: white;
-            padding: 8px 18px;
-            border-radius: 40px;
+            padding: 8px 16px;
+            border-radius: 50px;
             font-weight: 600;
             border: 2px solid #ffd966;
-            box-shadow: 0 4px 0 #2d6b6b;
-            font-size: 1.2rem;
+            box-shadow: 
+                0 4px 0 #2d6b6b,
+                0 6px 12px rgba(0,0,0,0.3);
+            font-size: 1rem;
             cursor: pointer;
             z-index: 2;
-            transition: 0.2s;
+            transition: all 0.2s ease;
         }
+        
         .info-badge:hover {
-            background: #6fb3b5;
-            transform: scale(1.02);
+            background: linear-gradient(135deg, #6fb3b5 0%, #7fc5c7 100%);
+            transform: scale(1.05) rotate(-2deg);
         }
+        
+        /* ============================================
+           MODAL (POPUP) DE EXPLICAÇÃO
+           Fundo escuro com blur, conteúdo centralizado
+           ============================================ */
         .modal {
             display: none;
             position: fixed;
             top: 0; left: 0; width: 100%; height: 100%;
-            background: rgba(0,0,0,0.7);
+            background: rgba(0,0,0,0.8);
+            backdrop-filter: blur(5px);
             align-items: center;
             justify-content: center;
             z-index: 999;
+            opacity: 0;
+            transition: opacity 0.3s ease;
         }
+        
+        .modal.active {
+            display: flex;
+            opacity: 1;
+        }
+        
+        /* Conteúdo interno do modal */
         .modal-content {
-            background: #fef9e8;
-            border-radius: 60px;
-            padding: 40px;
-            max-width: 500px;
+            background: linear-gradient(180deg, #fef9e8 0%, #fff5d6 100%);
+            border-radius: 32px;
+            padding: 32px;
+            max-width: 480px;
             margin: 20px;
-            border: 5px solid #ffd966;
-            box-shadow: 0 20px 30px black;
+            border: 4px solid #ffd966;
+            box-shadow: 
+                0 25px 50px rgba(0,0,0,0.5),
+                inset 0 1px 0 rgba(255,255,255,0.8);
             position: relative;
+            transform: scale(0.9) translateY(20px);
+            transition: transform 0.3s cubic-bezier(0.34, 1.56, 0.64, 1);
         }
+        
+        .modal.active .modal-content {
+            transform: scale(1) translateY(0);
+        }
+        
         .modal-content h2 {
             color: #0f3448;
-            font-size: 2rem;
-            margin-bottom: 20px;
+            font-size: 1.8rem;
+            margin-bottom: 16px;
+            text-align: center;
         }
+        
         .modal-content p {
-            font-size: 1.3rem;
-            margin-bottom: 20px;
-            line-height: 1.5;
+            font-size: 1.15rem;
+            margin-bottom: 16px;
+            line-height: 1.6;
+            color: #333;
         }
+        
+        /* Caixa de exemplo no modal */
+        .modal-content .example {
+            background: linear-gradient(135deg, #e8f4f8 0%, #d4e9f0 100%);
+            padding: 16px;
+            border-radius: 16px;
+            border-left: 4px solid #2f6f8f;
+            margin: 16px 0;
+        }
+        
+        /* Botão de fechar modal */
         .modal-content button {
-            font-size: 1.5rem;
-            padding: 12px 30px;
-            background: #2f6f8f;
+            font-size: 1.3rem;
+            padding: 14px 32px;
+            background: linear-gradient(135deg, #2f6f8f 0%, #3a8ab0 100%);
             color: white;
             border: none;
-            border-radius: 40px;
-            box-shadow: 0 5px 0 #123b4e;
+            border-radius: 50px;
+            box-shadow: 
+                0 5px 0 #123b4e,
+                0 8px 15px rgba(0,0,0,0.3);
             cursor: pointer;
+            transition: all 0.2s ease;
+            display: block;
+            margin: 20px auto 0;
+            font-weight: 600;
         }
+        
+        .modal-content button:hover {
+            transform: translateY(-2px);
+            box-shadow: 
+                0 7px 0 #123b4e,
+                0 10px 20px rgba(0,0,0,0.35);
+        }
+        
+        .modal-content button:active {
+            transform: translateY(3px);
+            box-shadow: 
+                0 2px 0 #123b4e,
+                0 5px 10px rgba(0,0,0,0.3);
+        }
+        
+        /* ============================================
+           TELA DO JOGO (CONTEÚDO DINÂMICO)
+           Container onde as telas são renderizadas
+           ============================================ */
         .screen {
             display: flex;
             flex-direction: column;
-            gap: 28px;
+            gap: 20px;
+            animation: fadeIn 0.4s ease;
         }
+        
+        /* Animação de fade in ao trocar de tela */
+        @keyframes fadeIn {
+            from { opacity: 0; transform: translateY(10px); }
+            to { opacity: 1; transform: translateY(0); }
+        }
+        
+        /* ============================================
+           CABEÇALHO DA PERGUNTA
+           Mostra "PERGUNTA X/5"
+           ============================================ */
         .question-header {
-            background: #2f6f8f;
+            background: linear-gradient(135deg, #2f6f8f 0%, #3a8ab0 100%);
             color: white;
-            padding: 16px 20px;
-            border-radius: 60px;
-            font-size: 1.9rem;
+            padding: 14px 18px;
+            border-radius: 50px;
+            font-size: clamp(1.4rem, 4vw, 1.8rem);
             font-weight: 700;
             text-align: center;
-            box-shadow: 0 6px 0 #123b4e, 0 8px 12px black;
-            border: 1px solid #ffd966;
+            box-shadow: 
+                0 6px 0 #123b4e, 
+                0 10px 20px rgba(0,0,0,0.3),
+                inset 0 1px 0 rgba(255,255,255,0.2);
+            border: 1px solid rgba(255, 217, 102, 0.4);
             letter-spacing: 1px;
+            animation: slideDown 0.4s ease;
         }
+        
+        @keyframes slideDown {
+            from { opacity: 0; transform: translateY(-20px); }
+            to { opacity: 1; transform: translateY(0); }
+        }
+        
+        /* ============================================
+           LISTA DE NÚMEROS
+           Onde os 15 números da pergunta atual aparecem
+           ============================================ */
         .number-list {
-            border-radius: 48px;
-            padding: 24px 16px;
+            border-radius: 32px;
+            padding: 20px 14px;
             border: 3px dashed #2f6f8f;
-            box-shadow: inset 0 0 0 4px white, 0 8px 0 #0e2f3f;
-            font-size: 1.8rem;
+            box-shadow: 
+                inset 0 0 0 4px white, 
+                0 8px 0 #0e2f3f,
+                0 12px 25px rgba(0,0,0,0.2);
+            font-size: clamp(1.3rem, 3.5vw, 1.6rem);
             font-weight: 600;
             display: flex;
             flex-wrap: wrap;
             justify-content: center;
-            gap: 8px 18px;
-            margin: 10px 0 5px;
-            transition: background 0.2s;
-            min-height: 180px;
+            gap: 10px 14px;
+            margin: 8px 0;
+            transition: all 0.3s ease;
+            min-height: 160px;
             align-items: center;
+            position: relative;
+            overflow: hidden;
         }
+        
+        /* Efeito de brilho sutil na lista */
+        .number-list::before {
+            content: '';
+            position: absolute;
+            top: 0; left: 0; right: 0; bottom: 0;
+            background: radial-gradient(circle at 30% 30%, rgba(255,255,255,0.3) 0%, transparent 50%);
+            pointer-events: none;
+        }
+        
+        /* Cada número individual na lista */
         .number-list span {
-            background: white;
-            border-radius: 60px;
-            padding: 8px 18px;
+            background: linear-gradient(180deg, #ffffff 0%, #f5f5f5 100%);
+            border-radius: 50px;
+            padding: 8px 16px;
             border: 2px solid #1c556b;
             color: #0b2b40;
-            font-family: 'Courier New', monospace;
+            font-family: 'SF Mono', 'Courier New', monospace;
             font-weight: 700;
-            box-shadow: 0 4px 0 #1c556b;
+            box-shadow: 
+                0 4px 0 #1c556b,
+                0 6px 10px rgba(0,0,0,0.15);
             transform: translateY(0);
-            transition: 0.1s;
+            transition: all 0.15s ease;
             display: inline-block;
+            animation: numberPop 0.3s ease backwards;
         }
+        
+        /* Animação de "pop" quando os números aparecem */
+        @keyframes numberPop {
+            from { opacity: 0; transform: scale(0.5) translateY(10px); }
+            to { opacity: 1; transform: scale(1) translateY(0); }
+        }
+        
+        /* Delay progressivo para cada número (efeito cascata) */
+        .number-list span:nth-child(1) { animation-delay: 0.02s; }
+        .number-list span:nth-child(2) { animation-delay: 0.04s; }
+        .number-list span:nth-child(3) { animation-delay: 0.06s; }
+        .number-list span:nth-child(4) { animation-delay: 0.08s; }
+        .number-list span:nth-child(5) { animation-delay: 0.10s; }
+        .number-list span:nth-child(6) { animation-delay: 0.12s; }
+        .number-list span:nth-child(7) { animation-delay: 0.14s; }
+        .number-list span:nth-child(8) { animation-delay: 0.16s; }
+        .number-list span:nth-child(9) { animation-delay: 0.18s; }
+        .number-list span:nth-child(10) { animation-delay: 0.20s; }
+        .number-list span:nth-child(11) { animation-delay: 0.22s; }
+        .number-list span:nth-child(12) { animation-delay: 0.24s; }
+        .number-list span:nth-child(13) { animation-delay: 0.26s; }
+        .number-list span:nth-child(14) { animation-delay: 0.28s; }
+        .number-list span:nth-child(15) { animation-delay: 0.30s; }
+        
+        /* Efeito hover nos números */
+        .number-list span:hover {
+            transform: translateY(-3px);
+            box-shadow: 
+                0 6px 0 #1c556b,
+                0 8px 15px rgba(0,0,0,0.2);
+        }
+        
+        /* ============================================
+           ANIMAÇÃO DE EMBARALHAMENTO
+           Classe adicionada durante a animação da roleta
+           ============================================ */
         .shaking span {
-            animation: shuffleMove 0.15s infinite alternate;
+            animation: shuffleMove 0.12s infinite alternate;
         }
+        
         @keyframes shuffleMove {
-            from { transform: translate(0px, 0px) rotate(0deg); }
-            to { transform: translate(4px, -4px) rotate(3deg); }
+            from { transform: translate(0px, 0px) rotate(0deg) scale(1); }
+            to { transform: translate(3px, -3px) rotate(2deg) scale(1.02); }
         }
+        
+        /* ============================================
+           ÁREA DE BOTÕES DE AÇÃO
+           SIM, NÃO, SAIR, ORDENAR
+           ============================================ */
         .actions {
             display: flex;
             flex-wrap: wrap;
             justify-content: center;
-            gap: 18px;
-            margin: 10px 0;
+            gap: 14px;
+            margin: 8px 0;
         }
+        
+        /* ============================================
+           ESTILO BASE DOS BOTÕES
+           ============================================ */
         button {
-            background: #fedb7a;
+            background: linear-gradient(180deg, #fedb7a 0%, #f5d070 100%);
             border: none;
-            padding: 18px 34px;
-            border-radius: 60px;
-            font-size: 1.8rem;
+            padding: 16px 30px;
+            border-radius: 50px;
+            font-size: clamp(1.4rem, 4vw, 1.7rem);
             font-weight: 800;
             color: #0b2b40;
             cursor: pointer;
-            box-shadow: 0 7px 0 #9b731c, 0 8px 12px black;
-            transition: 0.07s linear;
-            border: 2px solid #ffffffcc;
+            box-shadow: 
+                0 6px 0 #9b731c, 
+                0 8px 15px rgba(0,0,0,0.3),
+                inset 0 1px 0 rgba(255,255,255,0.4);
+            transition: all 0.1s ease;
+            border: 2px solid rgba(255,255,255,0.6);
             flex: 0 1 auto;
-            min-width: 160px;
+            min-width: 140px;
             letter-spacing: 1px;
+            position: relative;
+            overflow: hidden;
         }
+        
+        /* Efeito de brilho ao passar o mouse */
+        button::before {
+            content: '';
+            position: absolute;
+            top: 0; left: -100%;
+            width: 100%; height: 100%;
+            background: linear-gradient(90deg, transparent, rgba(255,255,255,0.3), transparent);
+            transition: left 0.5s ease;
+        }
+        
+        button:hover::before {
+            left: 100%;
+        }
+        
+        button:hover {
+            transform: translateY(-2px);
+            box-shadow: 
+                0 8px 0 #9b731c, 
+                0 10px 20px rgba(0,0,0,0.35),
+                inset 0 1px 0 rgba(255,255,255,0.4);
+        }
+        
         button:active {
-            transform: translateY(6px);
-            box-shadow: 0 2px 0 #9b731c, 0 5px 10px black;
+            transform: translateY(5px);
+            box-shadow: 
+                0 2px 0 #9b731c, 
+                0 5px 10px rgba(0,0,0,0.3),
+                inset 0 1px 0 rgba(255,255,255,0.4);
         }
+        
+        /* Botão desabilitado (durante animação) */
         button:disabled {
             opacity: 0.5;
             transform: translateY(4px);
             box-shadow: 0 3px 0 #7a5b1f;
             pointer-events: none;
         }
+        
+        /* ============================================
+           BOTÃO SAIR
+           Estilo diferenciado (cinza)
+           ============================================ */
         .quit-btn {
-            background: #c9c9c9;
+            background: linear-gradient(180deg, #c9c9c9 0%, #b8b8b8 100%);
             color: #1f2f3a;
-            box-shadow: 0 7px 0 #6b6b6b;
-            font-size: 1.5rem;
-            padding: 16px 28px;
+            box-shadow: 
+                0 6px 0 #6b6b6b,
+                0 8px 15px rgba(0,0,0,0.3);
+            font-size: clamp(1.2rem, 3.5vw, 1.4rem);
+            padding: 14px 24px;
         }
+        
+        .quit-btn:hover {
+            box-shadow: 
+                0 8px 0 #6b6b6b,
+                0 10px 20px rgba(0,0,0,0.35);
+        }
+        
+        .quit-btn:active {
+            box-shadow: 
+                0 2px 0 #6b6b6b,
+                0 5px 10px rgba(0,0,0,0.3);
+        }
+        
+        /* ============================================
+           ÁREA DE RESULTADO
+           Onde o número adivinhado aparece
+           ============================================ */
         .result-area {
-            background: #d2ecb0;
-            border-radius: 60px;
-            padding: 28px;
+            background: linear-gradient(180deg, #d2ecb0 0%, #c5e5a0 100%);
+            border-radius: 32px;
+            padding: 24px;
             text-align: center;
             border: 3px solid #5f8b2c;
-            box-shadow: inset 0 0 0 4px white, 0 8px 0 #2d511f;
+            box-shadow: 
+                inset 0 0 0 4px white, 
+                0 8px 0 #2d511f,
+                0 12px 25px rgba(0,0,0,0.25);
+            position: relative;
+            overflow: hidden;
         }
+        
+        /* Estilo para erro (número fora do range) */
+        .result-area.error {
+            background: linear-gradient(180deg, #ffb5b5 0%, #f5a0a0 100%);
+            border-color: #c44;
+            box-shadow: 
+                inset 0 0 0 4px white, 
+                0 8px 0 #822,
+                0 12px 25px rgba(0,0,0,0.25);
+        }
+        
+        /* O número grande do resultado */
         .result-number {
-            font-size: 7rem;
+            font-size: clamp(5rem, 15vw, 7rem);
             font-weight: 900;
             color: #1f4f2b;
             line-height: 1;
-            text-shadow: 4px 4px 0 #b0d47a;
+            text-shadow: 
+                4px 4px 0 #b0d47a,
+                0 0 30px rgba(176, 212, 122, 0.5);
             margin: 10px 0;
+            animation: resultBounce 0.6s cubic-bezier(0.34, 1.56, 0.64, 1);
         }
+        
+        /* Animação de bounce no resultado */
+        @keyframes resultBounce {
+            0% { transform: scale(0) rotate(-10deg); opacity: 0; }
+            50% { transform: scale(1.1) rotate(3deg); }
+            100% { transform: scale(1) rotate(0deg); opacity: 1; }
+        }
+        
+        /* ============================================
+           BOTÃO JOGAR NOVAMENTE
+           ============================================ */
         .restart-btn {
-            background: #5fa7c7;
+            background: linear-gradient(180deg, #5fa7c7 0%, #4a96b8 100%);
             color: white;
-            box-shadow: 0 7px 0 #1f4f6e;
-            font-size: 2rem;
-            padding: 22px 40px;
+            box-shadow: 
+                0 6px 0 #1f4f6e,
+                0 8px 15px rgba(0,0,0,0.3);
+            font-size: clamp(1.5rem, 4vw, 2rem);
+            padding: 18px 32px;
             width: 100%;
+            max-width: 400px;
         }
+        
+        .restart-btn:hover {
+            box-shadow: 
+                0 8px 0 #1f4f6e,
+                0 10px 20px rgba(0,0,0,0.35);
+        }
+        
+        .restart-btn:active {
+            box-shadow: 
+                0 2px 0 #1f4f6e,
+                0 5px 10px rgba(0,0,0,0.3);
+        }
+        
+        /* ============================================
+           TEXTO INTRODUTÓRIO (TELA INICIAL)
+           ============================================ */
         .lead-text {
-            font-size: 1.5rem;
+            font-size: clamp(1.2rem, 3.5vw, 1.5rem);
             color: #f0f9ff;
-            background: #00000033;
-            border-radius: 40px;
-            padding: 18px;
+            background: rgba(0,0,0,0.25);
+            border-radius: 24px;
+            padding: 20px;
             text-align: center;
+            line-height: 1.5;
+            border: 1px solid rgba(255,255,255,0.1);
         }
+        
+        /* ============================================
+           BOTÃO INICIAR JOGO
+           ============================================ */
         .start-btn {
-            background: #fedb7a;
-            font-size: 2.3rem;
-            padding: 25px 20px;
+            background: linear-gradient(180deg, #fedb7a 0%, #f5d070 100%);
+            font-size: clamp(1.8rem, 5vw, 2.3rem);
+            padding: 22px 20px;
             width: 100%;
+            animation: pulse 2s ease-in-out infinite;
         }
+        
+        /* Animação de pulsação no botão iniciar */
+        @keyframes pulse {
+            0%, 100% { transform: scale(1); }
+            50% { transform: scale(1.02); }
+        }
+        
+        .start-btn:hover {
+            animation: none;
+            transform: translateY(-3px) scale(1.01);
+        }
+        
+        /* ============================================
+           BOTÃO ORDENAR/VOLTAR
+           Reorganiza os números em ordem crescente
+           ============================================ */
         .sort-btn {
-            background: #87b9d6;
-            box-shadow: 0 5px 0 #3c647c;
-            font-size: 1.4rem;
+            background: linear-gradient(180deg, #87b9d6 0%, #6fa8c9 100%);
+            box-shadow: 
+                0 5px 0 #3c647c,
+                0 6px 12px rgba(0,0,0,0.25);
+            font-size: 1.2rem;
             padding: 12px 20px;
-            min-width: 120px;
+            min-width: 130px;
             align-self: center;
             margin-top: 5px;
+            color: white;
         }
+        
+        .sort-btn:hover {
+            box-shadow: 
+                0 7px 0 #3c647c,
+                0 8px 15px rgba(0,0,0,0.3);
+        }
+        
+        /* ============================================
+           HINT DE EMBARALHAMENTO
+           Texto "embaralhando números..." com ícone girando
+           ============================================ */
         .shuffle-hint {
-            font-size: 1.2rem;
+            font-size: 1.1rem;
             color: #ffe484;
-            background: #1b4e5e;
-            padding: 5px 15px;
+            background: linear-gradient(135deg, #1b4e5e 0%, #236578 100%);
+            padding: 10px 20px;
             border-radius: 30px;
             text-align: center;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            gap: 10px;
+            animation: hintPulse 1s ease-in-out infinite;
         }
+        
+        @keyframes hintPulse {
+            0%, 100% { opacity: 1; }
+            50% { opacity: 0.7; }
+        }
+        
+        /* Ícone de loading girando */
+        .shuffle-hint::before {
+            content: '🔄';
+            animation: spin 1s linear infinite;
+            display: inline-block;
+        }
+        
+        @keyframes spin {
+            from { transform: rotate(0deg); }
+            to { transform: rotate(360deg); }
+        }
+        
+        /* ============================================
+           CAIXA DE HISTÓRICO
+           Mostra as últimas partidas jogadas
+           ============================================ */
         .history-box {
-            background: #e0f0f5;
-            border-radius: 30px;
-            padding: 15px;
-            margin-top: 20px;
-            font-size: 1.2rem;
+            background: linear-gradient(180deg, #e0f0f5 0%, #d4e8ef 100%);
+            border-radius: 24px;
+            padding: 18px;
+            margin-top: 16px;
+            font-size: 1.1rem;
             border: 2px solid #2f6f8f;
+            box-shadow: inset 0 2px 5px rgba(0,0,0,0.05);
         }
+        
         .history-title {
             font-weight: bold;
             color: #0f3448;
+            display: flex;
+            align-items: center;
+            gap: 8px;
+            margin-bottom: 10px;
+        }
+        
+        /* Cada item do histórico */
+        .history-item {
+            display: flex;
+            align-items: center;
+            gap: 8px;
+            padding: 6px 0;
+            border-bottom: 1px dashed rgba(47, 111, 143, 0.3);
+        }
+        
+        .history-item:last-child {
+            border-bottom: none;
+        }
+        
+        /* Badge com o número adivinhado */
+        .history-number {
+            background: #2f6f8f;
+            color: white;
+            padding: 4px 12px;
+            border-radius: 20px;
+            font-weight: 700;
+            font-family: monospace;
+        }
+        
+        /* ============================================
+           PROMPT DA PERGUNTA
+           "O número que você pensou está nesta lista?"
+           ============================================ */
+        .question-prompt {
+            text-align: center;
+            font-size: clamp(1.2rem, 3.5vw, 1.4rem);
+            background: linear-gradient(135deg, #154454 0%, #1d5a70 100%);
+            color: white;
+            padding: 14px;
+            border-radius: 40px;
+            box-shadow: 
+                0 4px 0 #0a2a38,
+                0 6px 12px rgba(0,0,0,0.2);
+            animation: slideUp 0.4s ease;
+        }
+        
+        @keyframes slideUp {
+            from { opacity: 0; transform: translateY(20px); }
+            to { opacity: 1; transform: translateY(0); }
+        }
+        
+        /* ============================================
+           CAIXA DE EXPLICAÇÃO (COMENTADA NO JS)
+           Mostrava como a soma dos pesos funciona
+           ============================================ */
+        .explanation-box {
+            font-size: 1.1rem;
+            background: linear-gradient(135deg, #e8f0fe 0%, #d8e5fc 100%);
+            padding: 14px 18px;
+            border-radius: 24px;
+            margin-top: 12px;
+            border: 2px solid #a8c4f0;
+        }
+        
+        /* ============================================
+           DICAS DE TECLADO
+           Mostra atalhos como [1] [2] [ESC]
+           ============================================ */
+        .keyboard-hint {
+            font-size: 0.85rem;
+            color: #888;
+            text-align: center;
+            margin-top: 8px;
+        }
+        
+        .keyboard-hint kbd {
+            background: #f0f0f0;
+            border: 1px solid #ccc;
+            border-radius: 4px;
+            padding: 2px 8px;
+            font-family: monospace;
+            font-size: 0.9rem;
+        }
+        
+        /* ============================================
+           CANVAS DO CONFETE
+           Elemento para animação de partículas
+           ============================================ */
+        #confetti-canvas {
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            pointer-events: none;
+            z-index: 1000;
+        }
+        
+        /* ============================================
+           RESPONSIVIDADE - MOBILE
+           Ajustes para telas menores que 480px
+           ============================================ */
+        @media (max-width: 480px) {
+            .game-container {
+                padding: 12px;
+                border-radius: 20px;
+            }
+            
+            .card {
+                padding: 20px 14px;
+                border-radius: 18px;
+            }
+            
+            .counter-badge, .info-badge {
+                font-size: 0.85rem;
+                padding: 6px 12px;
+            }
+            
+            .counter-badge {
+                top: 10px;
+                right: 12px;
+            }
+            
+            .info-badge {
+                top: 10px;
+                left: 12px;
+            }
+            
+            .number-list {
+                gap: 8px 10px;
+                padding: 16px 10px;
+            }
+            
+            .number-list span {
+                padding: 6px 12px;
+                font-size: 1rem;
+            }
+            
+            .modal-content {
+                padding: 24px 20px;
+                margin: 16px;
+            }
+            
+            .modal-content h2 {
+                font-size: 1.5rem;
+            }
+            
+            .modal-content p {
+                font-size: 1rem;
+            }
+        }
+        
+        /* ============================================
+           ACESSIBILIDADE - REDUZIR ANIMAÇÕES
+           Para usuários que preferem menos movimento
+           ============================================ */
+        @media (prefers-reduced-motion: reduce) {
+            *, *::before, *::after {
+                animation-duration: 0.01ms !important;
+                animation-iteration-count: 1 !important;
+                transition-duration: 0.01ms !important;
+            }
         }
     </style>
 </head>
 <body>
+<!-- ============================================
+     CANVAS PARA ANIMAÇÃO DE CONFETE
+     Usado quando o jogador acerta o número
+     ============================================ -->
+<canvas id="confetti-canvas"></canvas>
+
+<!-- ============================================
+     CONTAINER PRINCIPAL DO JOGO
+     ============================================ -->
 <div class="game-container">
     <div class="card">
+        <!-- Badge de contador de acessos -->
         <div class="counter-badge" id="visitCounter">👥 0</div>
-        <div class="info-badge" id="infoButton">❓ Como funciona?</div>
+        
+        <!-- Botão que abre o modal de explicação -->
+        <div class="info-badge" id="infoButton" title="Como funciona?">❓ Como funciona?</div>
+        
+        <!-- Título do jogo -->
         <h1>🔢 ATÉ 30 <br>EU ADIVINHO</h1>
+        
+        <!-- Subtítulo explicativo -->
         <div class="subhead">🧠 pense em um número · 5 perguntas</div>
+        
+        <!-- Área onde o conteúdo dinâmico é renderizado -->
         <div id="gameScreen" class="screen">
-            <!-- conteúdo dinâmico -->
+            <!-- conteúdo dinâmico inserido via JavaScript -->
         </div>
     </div>
 </div>
 
-<!-- Modal explicativo -->
+<!-- ============================================
+     MODAL DE EXPLICAÇÃO MATEMÁTICA
+     Mostra como a mágica binária funciona
+     ============================================ -->
 <div id="infoModal" class="modal">
     <div class="modal-content">
         <h2>🧮 A mágica por trás</h2>
-        <p>Cada pergunta vale um peso: 1, 2, 4, 8, 16. Se você responde "SIM", o peso é somado.</p>
-        <p>Os números em cada lista são escolhidos de modo que a soma dos pesos das perguntas que você respondeu "SIM" resulta exatamente no número que você pensou. É como uma representação binária de 1 a 30!</p>
-        <p>👉 Experimente: pense em 21. Você diria SIM nas perguntas 1 (1), 3 (4) e 5 (16). 1+4+16 = 21.</p>
-        <button id="closeModalBtn">ENTENDI!</button>
+        <p>Cada pergunta vale um <strong>peso binário</strong>: 1, 2, 4, 8, 16. Se você responde "SIM", o peso é somado.</p>
+        <p>Os números em cada lista são escolhidos de modo que a soma dos pesos resulta exatamente no número que você pensou. É uma representação binária de 1 a 30!</p>
+        <div class="example">
+            <strong>👉 Exemplo:</strong> pense em <strong>21</strong><br>
+            Você diria SIM nas perguntas 1 (1), 3 (4) e 5 (16)<br>
+            <strong>1 + 4 + 16 = 21</strong> ✨
+        </div>
+        <button id="closeModalBtn">ENTENDI! 🎉</button>
     </div>
 </div>
 
 <script>
+    // ============================================
+    // IIFE (Immediately Invoked Function Expression)
+    // Isola todo o código do jogo em um escopo próprio
+    // ============================================
     (function() {
-        // ---------- CONTADOR DE ACESSOS ----------
+        
+        // ============================================
+        // CONTADOR DE ACESSOS
+        // Usa localStorage para persistir entre sessões
+        // Incrementa cada vez que a página é carregada
+        // ============================================
         let visitCount = localStorage.getItem('adivinha30_visits');
         if (visitCount === null) {
             visitCount = 1;
@@ -334,46 +940,200 @@
         localStorage.setItem('adivinha30_visits', visitCount);
         document.getElementById('visitCounter').innerText = `👥 ${visitCount}`;
 
-        // ---------- DADOS ORIGINAIS ----------
+        // ============================================
+        // DADOS DO JOGO - LISTAS BINÁRIAS
+        // Cada lista contém números que têm um bit específico ativo:
+        // Lista 0 (peso 1): números ímpares (bit 0 = 1)
+        // Lista 1 (peso 2): números onde bit 1 = 1
+        // Lista 2 (peso 4): números onde bit 2 = 1
+        // Lista 3 (peso 8): números onde bit 3 = 1
+        // Lista 4 (peso 16): números onde bit 4 = 1
+        // ============================================
         const ORIGINAL_LISTS = [
-            [25, 15, 9, 5, 17, 19, 7, 1, 29, 27, 21, 11, 3, 23, 13],
-            [18, 26, 7, 11, 30, 15, 23, 2, 10, 27, 14, 22, 3, 19, 6],
-            [6, 21, 15, 22, 14, 28, 7, 4, 20, 5, 30, 13, 29, 23, 12],
-            [25, 9, 12, 27, 10, 30, 14, 8, 24, 13, 26, 15, 29, 11, 28],
-            [22, 18, 20, 26, 24, 30, 27, 16, 23, 21, 29, 17, 28, 19, 25]
+            [25, 15, 9, 5, 17, 19, 7, 1, 29, 27, 21, 11, 3, 23, 13],  // Peso 1 (2^0)
+            [18, 26, 7, 11, 30, 15, 23, 2, 10, 27, 14, 22, 3, 19, 6],  // Peso 2 (2^1)
+            [6, 21, 15, 22, 14, 28, 7, 4, 20, 5, 30, 13, 29, 23, 12],  // Peso 4 (2^2)
+            [25, 9, 12, 27, 10, 30, 14, 8, 24, 13, 26, 15, 29, 11, 28], // Peso 8 (2^3)
+            [22, 18, 20, 26, 24, 30, 27, 16, 23, 21, 29, 17, 28, 19, 25] // Peso 16 (2^4)
         ];
+        
+        // Pesos correspondentes a cada pergunta (potências de 2)
         const PESOS = [1, 2, 4, 8, 16];
+        
+        // Cores de fundo para cada pergunta (alternam visualmente)
         const BG_COLORS = ['#f5e6d3', '#d4e6f1', '#d5f0d5', '#fce3c7', '#e3d7f5'];
 
-        // ---------- ESTADO ----------
-        let shuffledLists = [];
-        let currentQuestion = 0;
-        let soma = 0;
-        let gameActive = false;
-        let sortedMode = false;
-        let animating = false;
-        let history = [];  // armazena últimas partidas { numero, data }
+        // ============================================
+        // ESTADO DO JOGO
+        // Variáveis que controlam o fluxo da partida
+        // ============================================
+        let shuffledLists = [];     // Cópia embaralhada das listas originais
+        let currentQuestion = 0;    // Índice da pergunta atual (0-4)
+        let soma = 0;               // Soma acumulada dos pesos (respostas SIM)
+        let gameActive = false;     // Se o jogo está em andamento
+        let sortedMode = false;     // Se a lista está ordenada ou embaralhada
+        let animating = false;      // Se está em animação de embaralhamento
+        let history = [];           // Histórico de partidas anteriores
 
-        // Carregar histórico do localStorage
+        // ============================================
+        // CARREGAR HISTÓRICO DO LOCALSTORAGE
+        // Recupera partidas anteriores salvas no navegador
+        // ============================================
         try {
             const saved = localStorage.getItem('adivinha30_history');
             if (saved) history = JSON.parse(saved);
-        } catch (e) {}
+        } catch (e) {
+            // Silenciosamente ignora erro de localStorage
+        }
 
+        // ============================================
+        // FUNÇÃO: SALVAR PARTIDA NO HISTÓRICO
+        // Adiciona nova partida no início do array (máx 5)
+        // ============================================
         function salvarHistorico(numero) {
-            const partida = { numero, data: new Date().toLocaleString() };
-            history.unshift(partida);
-            if (history.length > 5) history.pop();
+            const partida = { 
+                numero, 
+                data: new Date().toLocaleString('pt-BR', { 
+                    day: '2-digit', 
+                    month: '2-digit', 
+                    hour: '2-digit', 
+                    minute: '2-digit' 
+                }) 
+            };
+            history.unshift(partida);           // Adiciona no início
+            if (history.length > 5) history.pop(); // Mantém só os 5 mais recentes
             localStorage.setItem('adivinha30_history', JSON.stringify(history));
         }
 
+        // ============================================
+        // REFERÊNCIAS AOS ELEMENTOS DO DOM
+        // ============================================
         const gameScreen = document.getElementById('gameScreen');
         const modal = document.getElementById('infoModal');
-        document.getElementById('infoButton').onclick = () => modal.style.display = 'flex';
-        document.getElementById('closeModalBtn').onclick = () => modal.style.display = 'none';
-        window.onclick = (e) => { if (e.target === modal) modal.style.display = 'none'; };
+        
+        // ============================================
+        // CONTROLES DO MODAL
+        // Abrir/fechar com animação
+        // ============================================
+        document.getElementById('infoButton').onclick = () => {
+            modal.classList.add('active');
+        };
+        document.getElementById('closeModalBtn').onclick = () => {
+            modal.classList.remove('active');
+        };
+        window.onclick = (e) => { 
+            if (e.target === modal) modal.classList.remove('active'); 
+        };
 
-        // ---------- UTILITÁRIOS ----------
+        // ============================================
+        // ATALHOS DE TECLADO
+        // Permite jogar sem usar o mouse
+        // ============================================
+        document.addEventListener('keydown', (e) => {
+            if (!gameActive || animating) return;
+            
+            // Tecla 1, S, ou Seta Esquerda = SIM
+            if (e.key === '1' || e.key === 's' || e.key === 'S' || e.key === 'ArrowLeft') {
+                const yesBtn = document.getElementById('yesBtn');
+                if (yesBtn) yesBtn.click();
+            } 
+            // Tecla 2, N, ou Seta Direita = NÃO
+            else if (e.key === '2' || e.key === 'n' || e.key === 'N' || e.key === 'ArrowRight') {
+                const noBtn = document.getElementById('noBtn');
+                if (noBtn) noBtn.click();
+            } 
+            // ESC = Sair do jogo
+            else if (e.key === 'Escape') {
+                const quitBtn = document.getElementById('quitBtn');
+                if (quitBtn) quitBtn.click();
+            } 
+            // O = Ordenar/Voltar lista
+            else if (e.key === 'o' || e.key === 'O') {
+                const sortToggleBtn = document.getElementById('sortToggleBtn');
+                if (sortToggleBtn) sortToggleBtn.click();
+            }
+        });
+
+        // ============================================
+        // EFEITO DE CONFETE
+        // Animação de partículas quando acerta o número
+        // ============================================
+        function launchConfetti() {
+            const canvas = document.getElementById('confetti-canvas');
+            const ctx = canvas.getContext('2d');
+            canvas.width = window.innerWidth;
+            canvas.height = window.innerHeight;
+            
+            // Cores das partículas
+            const colors = ['#ffd966', '#fedb7a', '#5fa7c7', '#d2ecb0', '#ff6b6b', '#4ecdc4'];
+            const particles = [];
+            const particleCount = 150;
+            
+            // Cria as partículas
+            for (let i = 0; i < particleCount; i++) {
+                particles.push({
+                    x: canvas.width / 2,           // Começa no centro
+                    y: canvas.height / 2,
+                    vx: (Math.random() - 0.5) * 20, // Velocidade X aleatória
+                    vy: (Math.random() - 0.5) * 20 - 5, // Velocidade Y aleatória (para cima)
+                    color: colors[Math.floor(Math.random() * colors.length)],
+                    size: Math.random() * 10 + 5,
+                    rotation: Math.random() * 360,
+                    rotationSpeed: (Math.random() - 0.5) * 10,
+                    gravity: 0.3,    // Gravidade puxando para baixo
+                    drag: 0.98       // Atrito do ar
+                });
+            }
+            
+            let animationId;
+            
+            // Loop de animação
+            function animate() {
+                ctx.clearRect(0, 0, canvas.width, canvas.height);
+                
+                let activeParticles = 0;
+                particles.forEach(p => {
+                    // Só desenha se ainda estiver visível na tela
+                    if (p.y < canvas.height + 50) {
+                        activeParticles++;
+                        p.x += p.vx;
+                        p.y += p.vy;
+                        p.vy += p.gravity;  // Aplica gravidade
+                        p.vx *= p.drag;     // Aplica atrito
+                        p.vy *= p.drag;
+                        p.rotation += p.rotationSpeed;
+                        
+                        // Desenha a partícula (quadrado rotacionado)
+                        ctx.save();
+                        ctx.translate(p.x, p.y);
+                        ctx.rotate(p.rotation * Math.PI / 180);
+                        ctx.fillStyle = p.color;
+                        ctx.fillRect(-p.size/2, -p.size/2, p.size, p.size);
+                        ctx.restore();
+                    }
+                });
+                
+                // Continua enquanto houver partículas ativas
+                if (activeParticles > 0) {
+                    animationId = requestAnimationFrame(animate);
+                } else {
+                    ctx.clearRect(0, 0, canvas.width, canvas.height);
+                }
+            }
+            
+            animate();
+            
+            // Para a animação após 4 segundos
+            setTimeout(() => {
+                cancelAnimationFrame(animationId);
+                ctx.clearRect(0, 0, canvas.width, canvas.height);
+            }, 4000);
+        }
+
+        // ============================================
+        // FUNÇÃO: EMBARALHAR ARRAY (Fisher-Yates)
+        // Algoritmo clássico de shuffle
+        // ============================================
         function shuffleArray(arr) {
             const copy = [...arr];
             for (let i = copy.length - 1; i > 0; i--) {
@@ -383,69 +1143,91 @@
             return copy;
         }
 
+        // ============================================
+        // FUNÇÃO: REEMBARALHAR TODAS AS LISTAS
+        // Cria novas versões embaralhadas para cada jogo
+        // ============================================
         function reshuffleAllLists() {
             shuffledLists = ORIGINAL_LISTS.map(list => shuffleArray(list));
         }
 
+        // ============================================
+        // FUNÇÃO: OBTER NÚMEROS PARA EXIBIÇÃO
+        // Retorna lista ordenada ou embaralhada conforme modo
+        // ============================================
         function getDisplayNumbers(questionIdx) {
             const base = shuffledLists[questionIdx];
             if (sortedMode) return [...base].sort((a,b) => a-b);
             return base;
         }
 
-        // ---------- ANIMAÇÃO COM ROLETA (trocas rápidas) ----------
+        // ============================================
+        // FUNÇÃO: ANIMAR EMBARALHAMENTO (ROLETA)
+        // Mostra números trocando rapidamente por 2 segundos
+        // ============================================
         function animarEmbaralhamento(questionIdx, callbackAposAnimacao) {
-            animating = true;
-            sortedMode = false;
+            animating = true;           // Bloqueia interações
+            sortedMode = false;         // Sempre começa embaralhado
             const listaReal = shuffledLists[questionIdx];
             const bgColor = BG_COLORS[questionIdx % BG_COLORS.length];
 
-            // Exibe tela com números iniciais
+            // Renderiza a tela de embaralhamento (botões desabilitados)
             gameScreen.innerHTML = `
                 <div class="question-header">❓ PERGUNTA ${questionIdx+1}/5</div>
                 <div class="number-list shaking" id="numberList" style="background: ${bgColor};">
                     ${listaReal.map(n => `<span>${n < 10 ? '0'+n : n}</span>`).join('')}
                 </div>
-                <div class="shuffle-hint">🔄 embaralhando números ...</div>
+                <div class="shuffle-hint">embaralhando números...</div>
                 <div class="actions">
-                    <button disabled>👍 SIM (1)</button>
-                    <button disabled>👎 NÃO (2)</button>
+                    <button disabled>👍 SIM <kbd>1</kbd></button>
+                    <button disabled>👎 NÃO <kbd>2</kbd></button>
                 </div>
                 <div style="display:flex; justify-content:center;">
-                    <button disabled class="quit-btn">⏹️ SAIR</button>
+                    <button disabled class="quit-btn">⏹️ SAIR <kbd>ESC</kbd></button>
                 </div>
                 <div style="display: flex; justify-content: center; margin-top: 10px;">
-                    <button disabled class="sort-btn">🔀 ORDENAR ↑</button>
+                    <button disabled class="sort-btn">🔀 ORDENAR <kbd>O</kbd></button>
                 </div>
             `;
 
             const listDiv = document.getElementById('numberList');
             let trocas = 0;
-            const maxTrocas = 15;  // durante 3 segundos, troca 15 vezes
+            const maxTrocas = 12;  // Número de trocas visuais
+            
+            // Intervalo que troca os números visualmente
             const interval = setInterval(() => {
-                if (!gameActive || !animating) { clearInterval(interval); return; }
-                // Cria uma ordem temporária aleatória (apenas para efeito visual)
+                if (!gameActive || !animating) { 
+                    clearInterval(interval); 
+                    return; 
+                }
+                // Cria uma ordem temporária aleatória apenas para efeito visual
                 const tempList = shuffleArray([...listaReal]);
                 listDiv.innerHTML = tempList.map(n => `<span>${n < 10 ? '0'+n : n}</span>`).join('');
                 trocas++;
+                
+                // Restaura a ordem real após todas as trocas
                 if (trocas >= maxTrocas) {
                     clearInterval(interval);
-                    // restaura a ordem real (que está em shuffledLists) e para a animação
                     if (gameActive && animating) {
                         listDiv.innerHTML = listaReal.map(n => `<span>${n < 10 ? '0'+n : n}</span>`).join('');
                     }
                 }
-            }, 180); // 180ms * 15 ≈ 2.7s + pequeno delay
+            }, 150);  // Troca a cada 150ms
 
+            // Após 2 segundos, libera a pergunta
             setTimeout(() => {
                 clearInterval(interval);
                 if (!gameActive) return;
                 animating = false;
                 listDiv.classList.remove('shaking');
                 callbackAposAnimacao(questionIdx);
-            }, 3000);
+            }, 2000);  // <-- ALTERADO: de 2500ms para 2000ms (2 segundos)
         }
 
+        // ============================================
+        // FUNÇÃO: EXIBIR PERGUNTA HABILITADA
+        // Mostra a pergunta com botões clicáveis
+        // ============================================
         function exibirPerguntaHabilitada(index) {
             if (!gameActive) return;
             const displayNumbers = getDisplayNumbers(index);
@@ -459,18 +1241,19 @@
                 <div style="display: flex; justify-content: center; gap: 20px; flex-wrap: wrap;">
                     <button id="sortToggleBtn" class="sort-btn">🔀 ORDENAR ↑</button>
                 </div>
-                <div style="text-align:center; font-size:1.4rem; margin:8px 0; background:#154454; color:white; padding:8px; border-radius:40px;">
-                    O número que você pensou está nesta lista?
+                <div class="question-prompt">
+                    🤔 O número que você pensou está nesta lista?
                 </div>
                 <div class="actions">
-                    <button id="yesBtn" class="yes-btn">👍 SIM (1)</button>
-                    <button id="noBtn" class="no-btn">👎 NÃO (2)</button>
+                    <button id="yesBtn" class="yes-btn">👍 SIM <kbd>1</kbd></button>
+                    <button id="noBtn" class="no-btn">👎 NÃO <kbd>2</kbd></button>
                 </div>
                 <div style="display:flex; justify-content:center;">
-                    <button id="quitBtn" class="quit-btn">⏹️ SAIR</button>
+                    <button id="quitBtn" class="quit-btn">⏹️ SAIR <kbd>ESC</kbd></button>
                 </div>
             `;
 
+            // Botão Ordenar/Voltar
             document.getElementById('sortToggleBtn').addEventListener('click', () => {
                 if (!gameActive || animating) return;
                 sortedMode = !sortedMode;
@@ -483,119 +1266,166 @@
                 if (btn) btn.textContent = sortedMode ? '🔀 VOLTAR' : '🔀 ORDENAR ↑';
             });
 
+            // Botão SIM - adiciona o peso à soma
             document.getElementById('yesBtn').addEventListener('click', () => {
                 if (!gameActive || animating) return;
-                soma += PESOS[index];
+                soma += PESOS[index];  // Soma o peso binário (1, 2, 4, 8 ou 16)
                 avancarPergunta();
             });
 
+            // Botão NÃO - não adiciona nada, só avança
             document.getElementById('noBtn').addEventListener('click', () => {
                 if (!gameActive || animating) return;
                 avancarPergunta();
             });
 
+            // Botão Sair - volta para tela inicial
             document.getElementById('quitBtn').addEventListener('click', () => {
                 gameActive = false;
                 mostrarTelaInicial('🛑 Você saiu do jogo. Até a próxima!');
             });
         }
 
+        // ============================================
+        // FUNÇÃO: AVANÇAR PARA PRÓXIMA PERGUNTA
+        // Ou mostra o resultado se for a última
+        // ============================================
         function avancarPergunta() {
             if (!gameActive) return;
             currentQuestion++;
             if (currentQuestion < 5) {
+                // Ainda há perguntas - anima a próxima
                 animarEmbaralhamento(currentQuestion, exibirPerguntaHabilitada);
             } else {
+                // Acabou as 5 perguntas - mostra resultado
                 mostrarResultado();
             }
         }
 
-        // ---------- INÍCIO DO JOGO ----------
+        // ============================================
+        // FUNÇÃO: INICIAR NOVO JOGO
+        // Reseta o estado e começa do zero
+        // ============================================
         function iniciarNovoJogo() {
-            reshuffleAllLists();
-            currentQuestion = 0;
-            soma = 0;
-            sortedMode = false;
-            gameActive = true;
+            reshuffleAllLists();    // Novas ordens aleatórias
+            currentQuestion = 0;    // Volta para primeira pergunta
+            soma = 0;               // Zera a soma
+            sortedMode = false;     // Começa embaralhado
+            gameActive = true;      // Ativa o jogo
             animarEmbaralhamento(0, exibirPerguntaHabilitada);
         }
 
+        // ============================================
+        // FUNÇÃO: MOSTRAR TELA INICIAL
+        // Tela de boas-vindas com botão iniciar
+        // ============================================
         function mostrarTelaInicial(mensagem = null) {
             gameActive = false;
-            const msgHtml = mensagem ? `<div style="background:#ffbaba; color:#a70000; padding:12px; border-radius:60px; margin-bottom:16px; font-weight:bold;">${mensagem}</div>` : '';
+            
+            // Mensagem opcional (ex: quando sai do jogo)
+            const msgHtml = mensagem ? `<div style="background:linear-gradient(135deg, #ffbaba 0%, #f5a0a0 100%); color:#800; padding:14px; border-radius:50px; margin-bottom:16px; font-weight:bold; border:2px solid #c44;">${mensagem}</div>` : '';
 
-            // Exibe histórico se houver
+            // Monta o HTML do histórico se houver partidas
             let historicoHtml = '';
             if (history.length > 0) {
-                historicoHtml = '<div class="history-box"><span class="history-title">📜 últimas partidas:</span><ul style="list-style:none; margin-top:8px;">';
-                history.forEach((h, i) => {
-                    historicoHtml += `<li>🔹 ${h.numero} (${h.data})</li>`;
+                historicoHtml = '<div class="history-box"><div class="history-title">📜 Últimas partidas</div>';
+                history.forEach((h) => {
+                    historicoHtml += `<div class="history-item"><span class="history-number">${h.numero < 10 ? '0'+h.numero : h.numero}</span><span>${h.data}</span></div>`;
                 });
-                historicoHtml += '</ul></div>';
+                historicoHtml += '</div>';
             }
 
+            // Renderiza a tela inicial
             gameScreen.innerHTML = `
                 <div class="lead-text">
                     ${msgHtml}
-                    Pense em um número de 01 a 30.<br>
-                    Eu vou adivinhar com 5 perguntas!
+                    🎯 Pense em um número de <strong>01 a 30</strong><br>
+                    Eu vou adivinhar com apenas <strong>5 perguntas!</strong>
                 </div>
                 ${historicoHtml}
                 <button id="startButton" class="start-btn">▶ INICIAR JOGO</button>
-                <div style="text-align: center; color: #c9e9ff; margin-top: 20px;">
-                    ⭐ novidade: animação com roleta e explicação matemática
+                <div style="text-align: center; color: #c9e9ff; margin-top: 16px; font-size: 0.95rem;">
+                    ✨ Use as teclas <kbd>1</kbd> (SIM) e <kbd>2</kbd> (NÃO) para responder mais rápido!
                 </div>
             `;
             document.getElementById('startButton').addEventListener('click', iniciarNovoJogo);
         }
 
+        // ============================================
+        // FUNÇÃO: MOSTRAR RESULTADO FINAL
+        // Exibe o número adivinhado e opções de reiniciar
+        // ============================================
         function mostrarResultado() {
             gameActive = false;
             let resultadoFinal = soma;
             let mensagem = '';
-            let corFundo = '#d2ecb0';
+            let isError = false;
+            
+            // Validação: número deve estar entre 1 e 30
             if (resultadoFinal < 1 || resultadoFinal > 30) {
-                mensagem = '⚠️ Olhe direito, é somente de 01 a 30.';
-                corFundo = '#ffb5b5';
+                mensagem = '⚠️ Ops! Algo deu errado. Tente novamente!';
+                isError = true;
             } else {
-                mensagem = 'O NÚMERO QUE VOCÊ PENSOU É:';
+                mensagem = '🎉 O NÚMERO QUE VOCÊ PENSOU É:';
                 salvarHistorico(resultadoFinal);
+                launchConfetti();  // Dispara o confete!
             }
+            
+            // Formata o número (adiciona zero à esquerda se necessário)
             const numeroFormatado = (resultadoFinal >= 1 && resultadoFinal <= 30) 
                 ? (resultadoFinal < 10 ? '0' + resultadoFinal : resultadoFinal) 
                 : '??';
 
-            // Montar explicação dos pesos
+            /* 
+            ============================================
+            EXPLICAÇÃO DOS PESOS (COMENTADA)
+            
+            Esta seção mostrava quais perguntas o jogador
+            respondeu SIM e como a soma dos pesos resulta
+            no número final. Foi comentada a pedido do usuário
+            pois a explicação já existe no modal "Como funciona?"
+            ============================================
+            
             let explicacaoPesos = '';
             if (resultadoFinal >= 1 && resultadoFinal <= 30) {
                 const respostas = [];
                 for (let i = 0; i < 5; i++) {
+                    // Verifica se o bit i está ativo no resultado
+                    // Ex: resultado = 21 (10101 em binário)
+                    // bits ativos: 0, 2, 4 -> P1, P3, P5
                     if (soma & PESOS[i]) respostas.push(`P${i+1} (${PESOS[i]})`);
                 }
-                explicacaoPesos = `<p style="font-size:1.2rem; background:#e8f0fe; padding:10px; border-radius:40px;">✅ Você disse SIM nas perguntas: ${respostas.join(' + ')} = ${resultadoFinal}</p>`;
+                explicacaoPesos = `<div class="explanation-box">✅ Você disse SIM em: ${respostas.join(' + ')} = <strong>${resultadoFinal}</strong></div>`;
             }
+            */
 
+            // Renderiza a tela de resultado
             gameScreen.innerHTML = `
-                <div class="result-area" style="background: ${corFundo};">
-                    <div style="font-size:2rem; font-weight:600;">${mensagem}</div>
+                <div class="result-area ${isError ? 'error' : ''}">
+                    <div style="font-size:clamp(1.4rem, 4vw, 1.8rem); font-weight:700;">${mensagem}</div>
                     <div class="result-number">${numeroFormatado}</div>
-                    ${explicacaoPesos}
-                    <div style="font-size:1.3rem; margin: 10px 0 20px;">🔮 magia matemática</div>
+                    <div style="font-size:1.2rem; margin: 10px 0 20px; opacity:0.8;">🔮 Mágica matemática!</div>
                     <button id="restartBtn" class="restart-btn">🔄 JOGAR NOVAMENTE</button>
-                    <div style="margin-top:20px;">
-                        <button id="quitAfterResultBtn" class="quit-btn" style="font-size:1.3rem;">🚪 SAIR</button>
+                    <div style="margin-top:16px;">
+                        <button id="quitAfterResultBtn" class="quit-btn" style="font-size:1.2rem;">🚪 SAIR</button>
                     </div>
                 </div>
             `;
+            
+            // Event listeners dos botões
             document.getElementById('restartBtn').addEventListener('click', iniciarNovoJogo);
             document.getElementById('quitAfterResultBtn').addEventListener('click', () => {
                 mostrarTelaInicial('Até mais! 👋');
             });
         }
 
-        // Inicial
+        // ============================================
+        // INICIALIZAÇÃO
+        // Mostra a tela inicial quando a página carrega
+        // ============================================
         mostrarTelaInicial();
-    })();
+        
+    })();  // Fim da IIFE
 </script>
 </body>
 </html>
